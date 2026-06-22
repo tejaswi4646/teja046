@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tejaswi Potnuru — Business Analyst</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        ::selection { background: #D2F86D; color: #0F3D2E; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .fade-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .skill-bar-fill {
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .skill-bar-fill.animate { width: var(--target-width); }
+
+        .timeline-line {
+            background: linear-gradient(to bottom, #D2F86D, #0F3D2E);
+        }
+
+        .experience-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            opacity: 0;
+        }
+        .experience-details.expanded {
+            max-height: 1200px;
+            opacity: 1;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #D2F86D;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .toast {
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .blob {
+            border-radius: 9999px;
+            filter: blur(64px);
+            opacity: 0.4;
+        }
+
+        .tab-btn.active {
+            background: #0F3D2E;
+            color: #D2F86D;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .pulse-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 9999px;
+            border: 2px solid #D2F86D;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        .counter { font-variant-numeric: tabular-nums; }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        .stat-number {
+            background: linear-gradient(135deg, #0F3D2E, #1a5c44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-700 antialiased">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-xl border-b border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-[#0F3D2E] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span class="text-[#D2F86D] font-semibold text-sm">T</span>
+                </div>
+                <span class="font-semibold text-slate-900 tracking-tight">Tejaswi</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#about" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">About</a>
+                <a href="#skills" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Skills</a>
+                <a href="#experience" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Experience</a>
+                <a href="#education" class="nav-link text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Education</a>
+                <a href="#contact" class="inline-flex items-center gap-2 bg-[#0F3D2E] text-[#D2F86D] px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#1a4f3d] transition-all shadow-sm hover:shadow-md">
+                    Let's Talk
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+            <button id="mobile-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors">
+                <i data-lucide="menu" class="w-6 h-6 text-slate-700"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-white z-[60] shadow-2xl p-8 flex flex-col">
+        <button id="mobile-close" class="self-end p-2 rounded-lg hover:bg-slate-100 transition-colors mb-8">
+            <i data-lucide="x" class="w-6 h-6 text-slate-700"></i>
+        </button>
+        <div class="flex flex-col gap-6">
+            <a href="#about" class="mobile-nav-link text-lg font-medium text-slate-700 hover:text-[#0F3D2E] transition-colors">About</a>
+            <a href="#skills" class="mobile-nav-link text-lg font-medium text-slate-700 hover:text-[#0F3D2E] transition-colors">Skills</a>
+            <a href="#experience" class="mobile-nav-link text-lg font-medium text-slate-700 hover:text-[#0F3D2E] transition-colors">Experience</a>
+            <a href="#education" class="mobile-nav-link text-lg font-medium text-slate-700 hover:text-[#0F3D2E] transition-colors">Education</a>
+            <a href="#contact" class="inline-flex items-center justify-center gap-2 bg-[#0F3D2E] text-[#D2F86D] px-6 py-3 rounded-full font-medium mt-4">
+                Let's Talk
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </div>
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/30 z-[55] hidden"></div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <div class="absolute top-32 right-20 w-96 h-96 blob bg-[#D2F86D] hidden lg:block"></div>
+        <div class="absolute bottom-20 left-10 w-64 h-64 blob bg-[#0F3D2E] hidden lg:block"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-up">
+                    <div class="inline-flex items-center gap-2 bg-[#0F3D2E]/5 border border-[#0F3D2E]/10 rounded-full px-4 py-2 mb-8">
+                        <span class="relative w-2 h-2 bg-green-500 rounded-full pulse-ring"></span>
+                        <span class="text-xs font-medium text-[#0F3D2E] tracking-wider uppercase">Available for Immediate Joining</span>
+                    </div>
+
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-semibold text-slate-900 tracking-tight leading-[1.05]">
+                        Tejaswi<br>
+                        <span class="font-serif italic text-[#0F3D2E]">Potnuru</span>
+                    </h1>
+
+                    <p class="text-xl md:text-2xl text-slate-500 mt-6 leading-relaxed max-w-lg">
+                        Business Analyst turning complex data into <span class="text-[#0F3D2E] font-medium">strategic decisions</span> across 6+ domains.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 mt-10">
+                        <a href="#contact" class="inline-flex items-center gap-2 bg-[#0F3D2E] text-[#D2F86D] px-8 py-4 rounded-full font-medium hover:bg-[#1a4f3d] transition-all shadow-lg hover:shadow-xl group">
+                            Get In Touch
+                            <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="#experience" class="inline-flex items-center gap-2 border border-slate-200 text-slate-700 px-8 py-4 rounded-full font-medium hover:bg-slate-50 transition-all group">
+                            View Experience
+                            <i data-lucide="chevron-down" class="w-5 h-5 group-hover:translate-y-0.5 transition-transform"></i>
+                        </a>
+                    </div>
+
+                    <div class="flex gap-10 mt-14">
+                        <div>
+                            <div class="text-3xl font-semibold stat-number counter" data-target="6">0</div>
+                            <div class="text-sm text-slate-500 mt-1">Years Exp.</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-semibold stat-number counter" data-target="8">0</div>
+                            <div class="text-sm text-slate-500 mt-1">Products Managed</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-semibold stat-number counter" data-target="6">0</div>
+                            <div class="text-sm text-slate-500 mt-1">Domains</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative fade-right hidden lg:block">
+                    <div class="relative z-10 float-anim">
+                        <div class="bg-gradient-to-br from-[#0F3D2E] to-[#1a5c44] rounded-3xl p-10 shadow-2xl">
+                            <div class="flex items-center gap-3 mb-8">
+                                <div class="w-12 h-12 bg-[#D2F86D] rounded-full flex items-center justify-center">
+                                    <span class="text-[#0F3D2E] font-bold text-lg">T</span>
+                                </div>
+                                <div>
+                                    <div class="text-white font-medium">Tejaswi Potnuru</div>
+                                    <div class="text-[#D2F86D] text-sm">Business Analyst</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-white/10 rounded-xl p-4 backdrop-blur">
+                                    <div class="flex items-center gap-2 text-[#D2F86D] text-xs font-medium mb-2 uppercase tracking-wider">
+                                        <i data-lucide="bar-chart-3" class="w-3 h-3"></i> Core Competency
+                                    </div>
+                                    <div class="text-white text-sm">Data-Driven Business Solutions</div>
+                                    <div class="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#D2F86D] rounded-full skill-bar-fill" style="--target-width: 95%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white/10 rounded-xl p-4 backdrop-blur">
+                                    <div class="flex items-center gap-2 text-[#D2F86D] text-xs font-medium mb-2 uppercase tracking-wider">
+                                        <i data-lucide="users" class="w-3 h-3"></i> Stakeholder Management
+                                    </div>
+                                    <div class="text-white text-sm">Cross-functional Collaboration</div>
+                                    <div class="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#D2F86D] rounded-full skill-bar-fill" style="--target-width: 90%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white/10 rounded-xl p-4 backdrop-blur">
+                                    <div class="flex items-center gap-2 text-[#D2F86D] text-xs font-medium mb-2 uppercase tracking-wider">
+                                        <i data-lucide="zap" class="w-3 h-3"></i> Agile Delivery
+                                    </div>
+                                    <div class="text-white text-sm">Scrum & Kanban Expertise</div>
+                                    <div class="mt-2 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#D2F86D] rounded-full skill-bar-fill" style="--target-width: 88%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 mt-6">
+                                <span class="bg-[#D2F86D]/20 text-[#D2F86D] px-3 py-1 rounded-full text-xs font-medium">SQL</span>
+                                <span class="bg-[#D2F86D]/20 text-[#D2F86D] px-3 py-1 rounded-full text-xs font-medium">Power BI</span>
+                                <span class="bg-[#D2F86D]/20 text-[#D2F86D] px-3 py-1 rounded-full text-xs font-medium">Tableau</span>
+                                <span class="bg-[#D2F86D]/20 text-[#D2F86D] px-3 py-1 rounded-full text-xs font-medium">Jira</span>
+                                <span class="bg-[#D2F86D]/20 text-[#D2F86D] px-3 py-1 rounded-full text-xs font-medium">API Testing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By / Domains -->
+    <section class="py-16 border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="fade-up">
+                <p class="text-center text-xs font-medium text-slate-400 uppercase tracking-widest mb-10">Domains of Expertise</p>
+                <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">Life Sciences</span>
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">Insurance (P&C)</span>
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">Logistics</span>
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">Finance</span>
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">Manufacturing</span>
+                    <span class="px-5 py-2.5 bg-slate-50 border border-slate-100 rounded-full text-sm font-medium text-slate-600 hover:bg-[#0F3D2E]/5 hover:border-[#0F3D2E]/10 transition-all cursor-default">E-commerce</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-left">
+                    <div class="relative">
+                        <img src="https://picsum.photos/seed/tejaswi-analyst/600/500.jpg" alt="Business Analysis" class="rounded-2xl shadow-xl object-cover w-full h-[500px]">
+                        <div class="absolute -bottom-6 -right-6 bg-[#D2F86D] rounded-2xl p-6 shadow-lg">
+                            <div class="text-[#0F3D2E] text-3xl font-bold">6+</div>
+                            <div class="text-[#0F3D2E]/70 text-sm font-medium">Years of<br>Experience</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-right">
+                    <span class="text-xs font-medium text-[#0F3D2E] uppercase tracking-widest">About Me</span>
+                    <h2 class="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mt-4 leading-tight">
+                        Bridging business <span class="font-serif italic text-[#0F3D2E]">vision</span> with data reality
+                    </h2>
+                    <p class="text-lg text-slate-500 mt-6 leading-relaxed">
+                        Business Analyst with 6+ years of experience delivering data-driven solutions across Life Sciences, Insurance (P&C), Logistics, Finance, Manufacturing and E-commerce domains.
+                    </p>
+                    <p class="text-lg text-slate-500 mt-4 leading-relaxed">
+                        Strong expertise in stakeholder management, Agile delivery, business process improvement, data analysis and BI reporting. Experienced in requirement gathering, BRD/SRS documentation, Power BI/Tableau dashboards, UAT coordination, API testing and process automation.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-6 mt-10">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#D2F86D]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="file-text" class="w-5 h-5 text-[#0F3D2E]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Documentation</div>
+                                <div class="text-slate-500 text-sm">BRD, FRD, SRS, RTM</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#D2F86D]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="presentation" class="w-5 h-5 text-[#0F3D2E]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">BI Reporting</div>
+                                <div class="text-slate-500 text-sm">Power BI, Tableau</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#D2F86D]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 text-[#0F3D2E]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Agile Delivery</div>
+                                <div class="text-slate-500 text-sm">Scrum & Kanban</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#D2F86D]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-[#0F3D2E]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Quality Assurance</div>
+                                <div class="text-slate-500 text-sm">UAT, API Testing</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center fade-up mb-16">
+                <span class="text-xs font-medium text-[#0F3D2E] uppercase tracking-widest">Core Skills</span>
+                <h2 class="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mt-4">
+                    My <span class="font-serif italic text-[#0F3D2E]">toolkit</span> for impact
+                </h2>
+            </div>
+
+            <!-- Skill Tabs -->
+            <div class="fade-up">
+                <div class="flex flex-wrap justify-center gap-2 mb-12">
+                    <button class="tab-btn active px-5 py-2.5 rounded-full text-sm font-medium transition-all border border-slate-200" data-tab="business">
+                        Business Analysis
+                    </button>
+                    <button class="tab-btn px-5 py-2.5 rounded-full text-sm font-medium transition-all border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" data-tab="data">
+                        Data & Analytics
+                    </button>
+                    <button class="tab-btn px-5 py-2.5 rounded-full text-sm font-medium transition-all border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" data-tab="testing">
+                        Testing & Delivery
+                    </button>
+                    <button class="tab-btn px-5 py-2.5 rounded-full text-sm font-medium transition-all border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" data-tab="tools">
+                        Tools
+                    </button>
+                    <button class="tab-btn px-5 py-2.5 rounded-full text-sm font-medium transition-all border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" data-tab="ai">
+                        AI & Other
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tab-business" class="tab-content">
+                    <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="clipboard-list" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Requirement Gathering</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Elicitation & Analysis</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="users" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Stakeholder Management</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Communication & Alignment</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">BRD / FRD / SRS</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Documentation Standards</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="git-branch" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Use Cases & User Stories</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Agile Story Mapping</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="shuffle" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Gap Analysis</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Current vs Target State</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="workflow" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">BPMN & Wireframes</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Process Modeling</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4 md:col-span-2">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Agile / Scrum</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Sprint Planning, Ceremonies & Delivery</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-data" class="tab-content hidden">
+                    <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="database" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">SQL</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Queries, Joins, Subqueries</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Power BI</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Dashboards & Reports</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="line-chart" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Tableau</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Visual Analytics</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Data Validation</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Quality & Integrity Checks</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="target" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">KPI Reporting</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Metrics & Performance</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="table" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Advanced Excel</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Formulas, Pivot Tables</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-testing" class="tab-content hidden">
+                    <div class="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="user-check" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">UAT</div>
+                                <div class="text-slate-400 text-xs mt-0.5">User Acceptance Testing</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="plug" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">API Testing</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Postman & Validation</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="bug" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">Manual Testing</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Test Cases & Execution</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl p-5 border border-slate-100 card-hover flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-[#0F3D2E] flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="list-checks" class="w-5 h-5 text-[#D2F86D]"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-slate-900 text-sm">RTM & Release Management</div>
+                                <div class="text-slate-400 text-xs mt-0.5">Traceability & Deployment</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-tools" class="tab-content hidden">
+                    <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="trello" class="w-4 h-4 text-[#0F3D2E]"></i> Jira</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="cloud" class="w-4 h-4 text-[#0F3D2E]"></i> Azure DevOps</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4 text-[#0F3D2E]"></i> Confluence</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="layout-grid" class="w-4 h-4 text-[#0F3D2E]"></i> Trello</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="send" class="w-4 h-4 text-[#0F3D2E]"></i> Postman</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="pen-tool" class="w-4 h-4 text-[#0F3D2E]"></i> Figma</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-[#0F3D2E]"></i> BlazeMeter</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="pencil" class="w-4 h-4 text-[#0F3D2E]"></i> Balsamiq</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4 text-[#0F3D2E]"></i> Lucidchart</span>
+                        <span class="px-5 py-3 bg-white border border-slate-100 rounded-xl text-sm font-medium text-slate-700 card-hover cursor-default flex items-center gap-2"><i data-lucide="git-branch" class="w-4 h-4 text-[#0F3D2E]"></i> Draw.io</span>
+                    </div>
+                </div>
+
+                <div id="tab-ai" class="tab-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <p class="text-sm text-slate-500 mb-6 text-center">Leveraging AI tools for enhanced productivity and analysis</p>
+                        <div class="flex flex-wrap justify-center gap-3 mb-8">
+                            <span class="px-5 py-3 bg-gradient-to-r from-[#0F3D2E]/5 to-[#D2F86D]/10 border border-[#0F3D2E]/10 rounded-xl text-sm font-medium text-[#0F3D2E] card-hover cursor-default">Claude</span>
+                            <span class="px-5 py-3 bg-gradient-to-r from-[#0F3D2E]/5 to-[#D2F86D]/10 border border-[#0F3D2E]/10 rounded-xl text-sm font-medium text-[#0F3D2E] card-hover cursor-default">ChatGPT</span>
+                            <span class="px-5 py-3 bg-gradient-to-r from-[#0F3D2E]/5 to-[#D2F86D]/10 border border-[#0F3D2E]/10 rounded-xl text-sm font-medium text-[#0F3D2E] card-hover cursor-default">Gemini</span>
+                            <span class="px-5 py-3 bg-gradient-to-r from-[#0F3D2E]/5 to-[#D2F86D]/10 border border-[#0F3D2E]/10 rounded-xl text-sm font-medium text-[#0F3D2E] card-hover cursor-default">Copilot</span>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <span class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-xs font-medium text-slate-600">Typing: 44 WPM</span>
+                            <span class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-xs font-medium text-slate-600">XML Understanding</span>
+                            <span class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-xs font-medium text-slate-600">HTML & CSS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center fade-up mb-16">
+                <span class="text-xs font-medium text-[#0F3D2E] uppercase tracking-widest">Professional Journey</span>
+                <h2 class="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mt-4">
+                    Where I've made <span class="font-serif italic text-[#0F3D2E]">impact</span>
+                </h2>
+            </div>
+
+            <!-- Timeline -->
+            <div class="max-w-4xl mx-auto relative">
+                <div class="absolute left-8 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#D2F86D] via-[#0F3D2E] to-[#0F3D2E]/20"></div>
+
+                <!-- Experience 1 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-12">
+                        <span class="text-xs font-medium text-[#D2F86D] bg-[#0F3D2E] px-3 py-1 rounded-full">Sep 2024 – Present</span>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 bg-[#D2F86D] border-4 border-[#0F3D2E] rounded-full z-10 top-1"></div>
+                    <div class="md:w-1/2 md:pl-12 pl-14">
+                        <div class="bg-white rounded-2xl border border-slate-100 p-6 card-hover shadow-sm">
+                            <h3 class="text-lg font-semibold text-slate-900">Business Analyst</h3>
+                            <p class="text-[#0F3D2E] font-medium text-sm mt-1">Data Unveil India Pvt. Ltd.</p>
+                            <p class="text-slate-400 text-xs mt-1 mb-4">Clients: Sanofi, Regeneron, Glaukos</p>
+                            <button class="expand-btn text-sm text-[#0F3D2E] font-medium flex items-center gap-1 hover:gap-2 transition-all" data-target="exp1">
+                                View Details <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                            </button>
+                            <div id="exp1" class="experience-details mt-4">
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Collaborated with cross-functional stakeholders to gather and manage reporting requirements</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Monitored project management activities, timelines, and resource tracking</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Supported development and maintenance of analytics dashboards and performance metrics</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Managed access control and governance with RBAC implementation</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Ensured data consistency and integrity across dashboards</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Identified opportunities for automation and process improvements</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Developed SOPs, documentation, and user guides</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Built automation tools to streamline reporting workflows</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Implemented PHI safeguards and data encryption practices</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Managed multiple initiatives simultaneously across multiple clients and data environments</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 2 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-12">
+                        <span class="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Feb 2024 – May 2024</span>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-[#0F3D2E] rounded-full z-10 top-1"></div>
+                    <div class="md:w-1/2 md:pl-12 pl-14">
+                        <div class="bg-white rounded-2xl border border-slate-100 p-6 card-hover shadow-sm">
+                            <h3 class="text-lg font-semibold text-slate-900">Forms Analyst</h3>
+                            <p class="text-[#0F3D2E] font-medium text-sm mt-1">RCG Global Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 3 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-12">
+                        <span class="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Sep 2022 – Feb 2024</span>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-[#0F3D2E] rounded-full z-10 top-1"></div>
+                    <div class="md:w-1/2 md:pl-12 pl-14">
+                        <div class="bg-white rounded-2xl border border-slate-100 p-6 card-hover shadow-sm">
+                            <h3 class="text-lg font-semibold text-slate-900">Business Analyst</h3>
+                            <p class="text-[#0F3D2E] font-medium text-sm mt-1">Halcyon Technologies</p>
+                            <button class="expand-btn text-sm text-[#0F3D2E] font-medium flex items-center gap-1 hover:gap-2 transition-all mt-4" data-target="exp3">
+                                View Details <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                            </button>
+                            <div id="exp3" class="experience-details mt-4">
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Conducted client calls and crafted comprehensive RFP documents for presales</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Developed BRD, SRS, RTM, PBS, MOM, RACI and Lean Canvas documents</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Facilitated scrum ceremonies and managed Kanban boards</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Executed Manual, UAT, and API testing; delivered product demos</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Managed lifecycle of 8+ products and led teams of 15+ members</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Leveraged SQL for data mapping and visualization tools for actionable insights</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 4 -->
+                <div class="relative flex flex-col md:flex-row gap-8 mb-12 fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-12">
+                        <span class="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Jun 2021 – Sep 2022</span>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-[#0F3D2E] rounded-full z-10 top-1"></div>
+                    <div class="md:w-1/2 md:pl-12 pl-14">
+                        <div class="bg-white rounded-2xl border border-slate-100 p-6 card-hover shadow-sm">
+                            <h3 class="text-lg font-semibold text-slate-900">Business Analyst</h3>
+                            <p class="text-[#0F3D2E] font-medium text-sm mt-1">Ramki Technologies</p>
+                            <button class="expand-btn text-sm text-[#0F3D2E] font-medium flex items-center gap-1 hover:gap-2 transition-all mt-4" data-target="exp4">
+                                View Details <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                            </button>
+                            <div id="exp4" class="experience-details mt-4">
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Conducted on-site analysis of current and target state systems</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Established client accounts via ETL processes and master data management</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Developed wireframes, process flow, and data flow diagrams</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Validated APIs: GPS, E-way bill, E-toll, IOCL, Aadhar, Tally, and more</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Managed 7+ clients across India as primary point of contact</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Assisted Dev and QA teams in mapping and testing master data</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 5 -->
+                <div class="relative flex flex-col md:flex-row gap-8 fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-12">
+                        <span class="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Jul 2019 – Feb 2021</span>
+                    </div>
+                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-slate-200 rounded-full z-10 top-1"></div>
+                    <div class="md:w-1/2 md:pl-12 pl-14">
+                        <div class="bg-white rounded-2xl border border-slate-100 p-6 card-hover shadow-sm">
+                            <h3 class="text-lg font-semibold text-slate-900">Graduate Engineer Trainee</h3>
+                            <p class="text-[#0F3D2E] font-medium text-sm mt-1">KSH Automotives Pvt. Ltd.</p>
+                            <button class="expand-btn text-sm text-[#0F3D2E] font-medium flex items-center gap-1 hover:gap-2 transition-all mt-4" data-target="exp5">
+                                View Details <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                            </button>
+                            <div id="exp5" class="experience-details mt-4">
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Led cross-functional teams in India and Korea for on-premises ERP</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Delivered product demonstrations enabling smoother ERP adoption</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Configured inventory, accounts, and billing master data</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Implemented system modifications for PO, GST, and pricing updates</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Prepared and analyzed monthly inventory and reconciliation reports</li>
+                                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-[#D2F86D] rounded-full mt-2 flex-shrink-0"></span>Handled end-to-end ERP maintenance, configuration, and upgrades</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Certifications -->
+    <section id="education" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center fade-up mb-16">
+                <span class="text-xs font-medium text-[#0F3D2E] uppercase tracking-widest">Education & Certifications</span>
+                <h2 class="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mt-4">
+                    Continuous <span class="font-serif italic text-[#0F3D2E]">learning</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Education -->
+                <div class="fade-left">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-8 h-full card-hover">
+                        <div class="w-14 h-14 rounded-2xl bg-[#0F3D2E] flex items-center justify-center mb-6">
+                            <i data-lucide="graduation-cap" class="w-7 h-7 text-[#D2F86D]"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-900">Education</h3>
+                        <div class="mt-6 space-y-4">
+                            <div class="border-l-2 border-[#D2F86D] pl-4">
+                                <div class="font-medium text-slate-900">B.Tech Mechanical Engineering</div>
+                                <div class="text-slate-500 text-sm mt-1">Avanthi's Research & Technological Academy</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="fade-right">
+                    <div class="bg-white rounded-2xl border border-slate-100 p-8 h-full card-hover">
+                        <div class="w-14 h-14 rounded-2xl bg-[#D2F86D] flex items-center justify-center mb-6">
+                            <i data-lucide="award" class="w-7 h-7 text-[#0F3D2E]"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-900">Certifications</h3>
+                        <div class="mt-6 space-y-4">
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                                <div class="w-10 h-10 bg-[#0F3D2E] rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="check" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-slate-900 text-sm">Atlassian Agile Project Management</div>
+                                    <div class="text-slate-400 text-xs">Professional Certificate – 2024</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                                <div class="w-10 h-10 bg-[#0F3D2E] rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="check" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-slate-900 text-sm">Six Sigma Green Belt</div>
+                                    <div class="text-slate-400 text-xs">Certification – 2024</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-[#D2F86D]/10 rounded-xl border border-[#D2F86D]/20">
+                                <div class="w-10 h-10 bg-[#D2F86D] rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="loader" class="w-5 h-5 text-[#0F3D2E] animate-spin" style="animation-duration: 3s;"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-slate-900 text-sm">CBAP</div>
+                                    <div class="text-[#0F3D2E] text-xs font-medium">In Progress</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="bg-gradient-to-br from-[#0F3D2E] to-[#1a5c44] rounded-3xl p-10 md:p-16 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#D2F86D] rounded-full blur-[100px] opacity-20"></div>
+                <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#D2F86D] rounded-full blur-[120px] opacity-10"></div>
+
+                <div class="relative z-10 grid lg:grid-cols-2 gap-16">
+                    <div class="fade-left">
+                        <span class="text-xs font-medium text-[#D2F86D] uppercase tracking-widest">Get In Touch</span>
+                        <h2 class="text-4xl md:text-5xl font-semibold text-white tracking-tight mt-4 leading-tight">
+                            Let's build something <span class="font-serif italic text-[#D2F86D]">great</span> together
+                        </h2>
+                        <p class="text-lg text-white/60 mt-6 leading-relaxed">
+                            Currently serving notice period and available for immediate joining. I'd love to discuss how my expertise can add value to your team.
+                        </p>
+
+                        <div class="space-y-6 mt-10">
+                            <a href="mailto:tejaswi9030@gmail.com" class="flex items-center gap-4 group">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-[#D2F86D]/20 transition-colors">
+                                    <i data-lucide="mail" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white/40 text-xs uppercase tracking-wider">Email</div>
+                                    <div class="text-white font-medium group-hover:text-[#D2F86D] transition-colors">tejaswi9030@gmail.com</div>
+                                </div>
+                            </a>
+                            <a href="tel:+919963939556" class="flex items-center gap-4 group">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-[#D2F86D]/20 transition-colors">
+                                    <i data-lucide="phone" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white/40 text-xs uppercase tracking-wider">Phone</div>
+                                    <div class="text-white font-medium group-hover:text-[#D2F86D] transition-colors">+91 99639 39556</div>
+                                </div>
+                            </a>
+                            <a href="https://linkedin.com/in/teja046" target="_blank" class="flex items-center gap-4 group">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-[#D2F86D]/20 transition-colors">
+                                    <i data-lucide="linkedin" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white/40 text-xs uppercase tracking-wider">LinkedIn</div>
+                                    <div class="text-white font-medium group-hover:text-[#D2F86D] transition-colors">linkedin.com/in/teja046</div>
+                                </div>
+                            </a>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                                    <i data-lucide="map-pin" class="w-5 h-5 text-[#D2F86D]"></i>
+                                </div>
+                                <div>
+                                    <div class="text-white/40 text-xs uppercase tracking-wider">Location</div>
+                                    <div class="text-white font-medium">Vizag, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fade-right">
+                        <form id="contact-form" class="bg-white/10 backdrop-blur rounded-2xl p-8 border border-white/10">
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="text-white/60 text-sm font-medium block mb-2">Full Name</label>
+                                    <input type="text" id="form-name" placeholder="Your name" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#D2F86D]/50 focus:ring-1 focus:ring-[#D2F86D]/50 transition-all text-sm" required>
+                                </div>
+                                <div>
+                                    <label class="text-white/60 text-sm font-medium block mb-2">Email</label>
+                                    <input type="email" id="form-email" placeholder="your@email.com" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#D2F86D]/50 focus:ring-1 focus:ring-[#D2F86D]/50 transition-all text-sm" required>
+                                </div>
+                                <div>
+                                    <label class="text-white/60 text-sm font-medium block mb-2">Message</label>
+                                    <textarea id="form-message" rows="4" placeholder="Tell me about your project or opportunity..." class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#D2F86D]/50 focus:ring-1 focus:ring-[#D2F86D]/50 transition-all text-sm resize-none" required></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-[#D2F86D] text-[#0F3D2E] px-8 py-4 rounded-xl font-semibold hover:bg-[#c2eb5b] transition-all flex items-center justify-center gap-2 group text-sm">
+                                    Send Message
+                                    <i data-lucide="send" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-[#0F3D2E] rounded-lg flex items-center justify-center">
+                        <span class="text-[#D2F86D] font-semibold text-sm">T</span>
+                    </div>
+                    <span class="font-semibold text-slate-900 tracking-tight">Tejaswi Potnuru</span>
+                </div>
+                <p class="text-slate-400 text-sm">© 2025 Tejaswi Potnuru. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="mailto:tejaswi9030@gmail.com" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-[#0F3D2E] hover:text-[#D2F86D] transition-all text-slate-500">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/teja046" target="_blank" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-[#0F3D2E] hover:text-[#D2F86D] transition-all text-slate-500">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    </a>
+                    <a href="tel:+919963939556" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-[#0F3D2E] hover:text-[#D2F86D] transition-all text-slate-500">
+                        <i data-lucide="phone" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 bg-[#0F3D2E] text-[#D2F86D] rounded-full shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all hover:bg-[#1a4f3d] z-50">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Scroll animations
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Animate skill bars
+                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                        setTimeout(() => bar.classList.add('animate'), 300);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up, .fade-left, .fade-right').forEach(el => observer.observe(el));
+
+        // Counter animation
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        let current = 0;
+                        const increment = target / 40;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                counter.textContent = target + '+';
+                                clearInterval(timer);
+                            } else {
+                                counter.textContent = Math.floor(current) + '+';
+                            }
+                        }, 50);
+                    });
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el.closest('div')));
+
+        // Skill tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('bg-white', 'text-slate-600');
+                });
+                btn.classList.add('active');
+                btn.classList.remove('bg-white', 'text-slate-600');
+
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Expandable experience
+        document.querySelectorAll('.expand-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                const icon = btn.querySelector('i, svg');
+                const isExpanded = target.classList.contains('expanded');
+
+                if (isExpanded) {
+                    target.classList.remove('expanded');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                    btn.querySelector('span') && (btn.firstChild.textContent = 'View Details ');
+                } else {
+                    target.classList.add('expanded');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Mobile menu
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileClose = document.getElementById('mobile-close');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+
+        function openMobile() {
+            mobileMenu.classList.add('open');
+            mobileOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobile() {
+            mobileMenu.classList.remove('open');
+            mobileOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        mobileToggle.addEventListener('click', openMobile);
+        mobileClose.addEventListener('click', closeMobile);
+        mobileOverlay.addEventListener('click', closeMobile);
+        document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeMobile));
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 100) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+            lastScroll = currentScroll;
+        });
+
+        // Back to top
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 600) {
+                backToTop.classList.remove('opacity-0', 'pointer-events-none');
+                backToTop.classList.add('opacity-100');
+            } else {
+                backToTop.classList.add('opacity-0', 'pointer-events-none');
+                backToTop.classList.remove('opacity-100');
+            }
+        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Active nav link highlight
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-[#0F3D2E]' : 'bg-red-600';
+            const icon = type === 'success' ? '✓' : '✕';
+            toast.className = `toast ${bgColor} text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 min-w-[300px]`;
+            toast.innerHTML = `
+                <span class="w-6 h-6 rounded-full bg-[#D2F86D] text-[#0F3D2E] flex items-center justify-center text-xs font-bold">${icon}</span>
+                <span class="text-sm font-medium">${message}</span>
+            `;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        // Contact form
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('form-name').value.trim();
+            const email = document.getElementById('form-email').value.trim();
+            const message = document.getElementById('form-message').value.trim();
+
+            if (!name || !email || !message) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Please enter a valid email', 'error');
+                return;
+            }
+
+            // Simulate sending
+            const btn = this.querySelector('button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-[#0F3D2E]/30 border-t-[#0F3D2E] rounded-full animate-spin"></span> Sending...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Thanks ${name}! Your message has been sent.`, 'success');
+                this.reset();
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                lucide.createIcons();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
